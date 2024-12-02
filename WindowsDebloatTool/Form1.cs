@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -79,6 +79,11 @@ namespace WindowsDebloatTool
                 qolFeedback.Text = "Error: " + ex.Message + " has occurred.";
             }
         }
+
+        //Special method that works on shortcut arrow button (could not get CheckRegistrySetting method to work for this key)
+        
+
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // QUALITY OF LIFE CHECK LISTENER
@@ -211,6 +216,14 @@ namespace WindowsDebloatTool
                 0,
                 checkLockScreenNotif
             );
+
+
+            CheckArrowIconSetting(checkArrowIconsRemoved);
+
+            CheckScrollbarWidthChange(checkScrollbarWidthChange);
+
+          
+
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -554,7 +567,7 @@ namespace WindowsDebloatTool
 
         private void buttonEnableDark_Click(object sender, EventArgs e)
         {
-            // Registry path for the settings notification setting
+            //Reg path for key
             string registryPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
 
             try
@@ -587,7 +600,7 @@ namespace WindowsDebloatTool
 
         private void buttonDisableDynamicLight_Click(object sender, EventArgs e)
         {
-            // Registry path for the settings notification setting
+            // Registry path for the key
             string registryPath = @"Software\Microsoft\Lighting";
 
             try
@@ -603,7 +616,7 @@ namespace WindowsDebloatTool
                     }
                     else
                     {
-                        MessageBox.Show("Unable to create or open the registry key.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        themeFeedback.Text = "Unable to create or open the registry key.";
                     }
                 }
             }
@@ -619,7 +632,7 @@ namespace WindowsDebloatTool
 
         private void buttonAppsControlLighting_Click(object sender, EventArgs e)
         {
-            // Registry path for the settings notification setting
+            // Registry path for key
             string registryPath = @"Software\Microsoft\Lighting";
 
             try
@@ -651,7 +664,7 @@ namespace WindowsDebloatTool
 
         private void buttonDisableWindowsAccent_Click(object sender, EventArgs e)
         {
-            // Registry path for the settings notification setting
+            // Registry path for key
             string registryPath = @"Software\Microsoft\Lighting";
 
             try
@@ -683,7 +696,7 @@ namespace WindowsDebloatTool
 
         private void buttonDisableNotifSound_Click(object sender, EventArgs e)
         {
-            // Registry path for the settings notification setting
+            // Registry path for key
             string registryPath = @"Software\Microsoft\Windows\CurrentVersion\Notifications\Settings";
 
             try
@@ -715,7 +728,7 @@ namespace WindowsDebloatTool
 
         private void buttonDisableLockNotif_Click(object sender, EventArgs e)
         {
-            // Registry path for the settings notification setting
+            // Registry path for key
             string registryPath = @"Software\Microsoft\Windows\CurrentVersion\Notifications\Settings";
 
             try
@@ -744,6 +757,246 @@ namespace WindowsDebloatTool
                 themeFeedback.Text = "Error: " + ex.Message + " has occurred.";
             }
         }
+
+        //Special method to enable shortcut arrow checkbox within the GUI//
+        private void CheckArrowIconSetting(CheckBox checkArrowIconsRemoved)
+        {
+            try
+            {
+                //values for path, valuename, expected value
+                string registryPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons";
+                string valueName = "29";
+                string expectedValue = @"%windir%\System32\shell32.dll,-52";
+
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath))
+                {
+                    if (key != null)
+                    {
+                        object value = key.GetValue(valueName, null);
+
+                        checkArrowIconsRemoved.Checked = value != null && value.Equals(expectedValue);
+                    }
+                    else
+                    {
+                        checkArrowIconsRemoved.Checked = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Error check
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        private void removeArrowIcon_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Registry path for key
+                string registryPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer";
+
+                // used to view and edit the registry in a 64 bit view
+                RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64)
+                                             .OpenSubKey(registryPath, writable: true);
+
+                if (key == null)
+                {
+                    // create new path if it doesn't already exist
+                    key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
+                                      .CreateSubKey(registryPath);
+                }
+
+                // creating the subkey itself
+                RegistryKey shellIconsKey = key.CreateSubKey("Shell Icons");
+
+                // setting value
+                shellIconsKey.SetValue("29", @"%windir%\System32\shell32.dll,-52");
+
+                // Close the registry key
+                shellIconsKey.Close();
+                key.Close();
+
+                
+                themeFeedback.Text = "The 'Shell Icons' registry key and value have been added successfully!";
+                                
+            }
+            catch (Exception ex)
+            {
+                // Error check
+                themeFeedback.Text = $"Error: {ex.Message}\nTry running the application as an administrator."; ;
+            }
+
+
+        }
+
+        //Special method to enable the scrollbar checkbox within the GUI//
+        private void CheckScrollbarWidthChange(CheckBox checkScrollbarWidthChange)
+        {
+            try
+            {
+                //reg path and value defined here
+                string registryPath = @"Control Panel\Desktop\WindowMetrics";
+                string valueName = "ScrollWidth";  
+
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath))
+                {
+                    if (key != null)
+                    {
+                        // read value as a string
+                        object value = key.GetValue(valueName, null);
+
+                        // Check if the value is not equal to the string "-15"
+                        checkScrollbarWidthChange.Checked = value != null && value.ToString() != "-15";
+                    }
+                    else
+                    {
+                        // If the registry key doesn't exist, uncheck the checkbox
+                        checkScrollbarWidthChange.Checked = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Error check
+                themeFeedback.Text = $"Error: {ex.Message}\nTry running the application as an administrator.";
+            }
+        }
+
+
+        private void editScrollbarWidth_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Prompt the user to enter the desired scrollbar width in pixels
+                string input = Microsoft.VisualBasic.Interaction.InputBox(
+                    "Enter the desired scrollbar width in pixels (positive integer):",
+                    "Set Scrollbar Width",
+                    "15");
+
+                // Validate the input
+                if (int.TryParse(input, out int pixelValue) && pixelValue > 0)
+                {
+                    // conversion for registry UI (-15 = 1 pixel)
+                    int registryValue = pixelValue * -15;
+
+                    // Update the registry to adjust the scrollbar width
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "ScrollWidth", registryValue.ToString());
+
+                   
+                    themeFeedback.Text = $"Scrollbar width has been set to {pixelValue} pixels.";
+                }
+                else
+                {
+                    // Handle invalid input
+                    themeFeedback.Text = "Please enter a valid positive integer for the scrollbar width.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Error Check
+                themeFeedback.Text = $"Error: {ex.Message}\nTry running the application as an administrator.";
+            }
+        }
+
+        //Special method for cursor button that creates a prompt for different type of cursors (arrow, hand, wait)//
+        private bool PromptToChangeCursor(string cursorType)
+        {
+            // show message box asking user if they would like to change the cursor dependant on what type is currently on screen
+            var result = MessageBox.Show($"Would you like to change the {cursorType} cursor?",
+                                         $"Change {cursorType} Cursor",
+                                         MessageBoxButtons.YesNo);
+            return result == DialogResult.Yes; // Return true if Yes, false if No
+        }
+
+        //Special method for cursor button that creates a file directory window if user accepts prompt//
+        private string SelectCursorFile()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Select a cursor file (.cur or .ani)";
+                openFileDialog.Filter = "Cursor Files (*.cur;*.ani)|*.cur;*.ani";
+                openFileDialog.Multiselect = false;
+
+                DialogResult result = openFileDialog.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    return openFileDialog.FileName;  // Return the selected cursor file path
+                }
+                else
+                {
+                    return null; // Return null if the user cancels the file selection
+                }
+            }
+        }
+
+        // Method that applies the selected file to the registry //
+        private void ApplyCursorToRegistry(string cursorType, string cursorFilePath)
+        {
+            // Registry path for key
+            string registryPath = @"HKEY_CURRENT_USER\Control Panel\Cursors";
+
+            // Apply the cursor file path dependant on cursor type
+            Registry.SetValue(registryPath, cursorType, cursorFilePath);
+
+        }
+
+        private void changeCursor_Click(object sender, EventArgs e)
+        {
+            // Change Arrow cursor
+            if (PromptToChangeCursor("Arrow"))
+            {
+                string arrowCursor = SelectCursorFile();
+                if (arrowCursor != null)
+                {
+                    ApplyCursorToRegistry("Arrow", arrowCursor);
+                    MessageBox.Show("Arrow cursor changed!");
+                }
+                else
+                {
+                    MessageBox.Show("Arrow cursor change skipped.");
+                }
+            }
+
+            // Change Hand cursor
+            if (PromptToChangeCursor("Hand"))
+            {
+                string handCursor = SelectCursorFile();
+                if (handCursor != null)
+                {
+                    ApplyCursorToRegistry("Hand", handCursor);
+                    MessageBox.Show("Hand cursor changed!");
+                }
+                else
+                {
+                    MessageBox.Show("Hand cursor change skipped.");
+                }
+            }
+
+            // Change Wait cursor
+            if (PromptToChangeCursor("Wait"))
+            {
+                string waitCursor = SelectCursorFile();
+                if (waitCursor != null)
+                {
+                    ApplyCursorToRegistry("Wait", waitCursor);
+                    MessageBox.Show("Wait cursor changed!");
+                }
+                else
+                {
+                    MessageBox.Show("Wait cursor change skipped.");
+                }
+            }
+            themeFeedback.Text = "Cursor was changed"; 
+        }
+
+        
+
+        
+
+        
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // PERFORMANCE FUNCTIONS 
@@ -940,5 +1193,14 @@ namespace WindowsDebloatTool
                 performanceFeedback.Text = "Error: " + ex.Message + " has occurred.";
             }
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        
     }
 }
+    
+
