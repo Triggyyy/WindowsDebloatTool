@@ -35,6 +35,8 @@ namespace WindowsDebloatTool
             this.debloatAuthors = new System.Windows.Forms.Label();
             this.welcomeLabel = new System.Windows.Forms.Label();
             this.qolTab = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.checkSettingsNotifications = new System.Windows.Forms.CheckBox();
             this.checkAppLaunches = new System.Windows.Forms.CheckBox();
             this.checkWindowsReplay = new System.Windows.Forms.CheckBox();
@@ -56,6 +58,11 @@ namespace WindowsDebloatTool
             this.qolFeedback = new System.Windows.Forms.Label();
             this.buttonDisableSearchSuggestions = new System.Windows.Forms.Button();
             this.themeTab = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.changeCursor = new System.Windows.Forms.Button();
+            this.checkScrollbarWidthChange = new System.Windows.Forms.CheckBox();
+            this.checkArrowIconsRemoved = new System.Windows.Forms.CheckBox();
             this.editScrollbarWidth = new System.Windows.Forms.Button();
             this.removeArrowIcon = new System.Windows.Forms.Button();
             this.checkLockScreenNotif = new System.Windows.Forms.CheckBox();
@@ -87,9 +94,8 @@ namespace WindowsDebloatTool
             this.buttonOptimizeBatteryVideo = new System.Windows.Forms.Button();
             this.performanceFeedback = new System.Windows.Forms.Label();
             this.performanceText = new System.Windows.Forms.Label();
-            this.checkArrowIconsRemoved = new System.Windows.Forms.CheckBox();
-            this.checkScrollbarWidthChange = new System.Windows.Forms.CheckBox();
-            this.changeCursor = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.debloatTabs.SuspendLayout();
             this.welcomeTab.SuspendLayout();
             this.qolTab.SuspendLayout();
@@ -164,6 +170,8 @@ namespace WindowsDebloatTool
             // 
             // qolTab
             // 
+            this.qolTab.Controls.Add(this.label1);
+            this.qolTab.Controls.Add(this.button1);
             this.qolTab.Controls.Add(this.checkSettingsNotifications);
             this.qolTab.Controls.Add(this.checkAppLaunches);
             this.qolTab.Controls.Add(this.checkWindowsReplay);
@@ -192,6 +200,25 @@ namespace WindowsDebloatTool
             this.qolTab.TabIndex = 1;
             this.qolTab.Text = "QoL Features";
             this.qolTab.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(575, 339);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(138, 13);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "Restore QoL Tab to Defualt";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(603, 364);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "OK";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // checkSettingsNotifications
             // 
@@ -423,6 +450,8 @@ namespace WindowsDebloatTool
             // 
             // themeTab
             // 
+            this.themeTab.Controls.Add(this.label2);
+            this.themeTab.Controls.Add(this.button2);
             this.themeTab.Controls.Add(this.changeCursor);
             this.themeTab.Controls.Add(this.checkScrollbarWidthChange);
             this.themeTab.Controls.Add(this.checkArrowIconsRemoved);
@@ -449,6 +478,57 @@ namespace WindowsDebloatTool
             this.themeTab.TabIndex = 2;
             this.themeTab.Text = "Theming";
             this.themeTab.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(582, 335);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(162, 13);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "Restore Theming Tab to Default:";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(629, 360);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 21;
+            this.button2.Text = "OK";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // changeCursor
+            // 
+            this.changeCursor.Location = new System.Drawing.Point(460, 239);
+            this.changeCursor.Name = "changeCursor";
+            this.changeCursor.Size = new System.Drawing.Size(119, 72);
+            this.changeCursor.TabIndex = 20;
+            this.changeCursor.Text = "Change Cursor (Arrow, Hand, Wait) REQUIRES .CUR / .ANI FILES ";
+            this.changeCursor.UseVisualStyleBackColor = true;
+            this.changeCursor.Click += new System.EventHandler(this.changeCursor_Click);
+            // 
+            // checkScrollbarWidthChange
+            // 
+            this.checkScrollbarWidthChange.AutoSize = true;
+            this.checkScrollbarWidthChange.Enabled = false;
+            this.checkScrollbarWidthChange.Location = new System.Drawing.Point(597, 252);
+            this.checkScrollbarWidthChange.Name = "checkScrollbarWidthChange";
+            this.checkScrollbarWidthChange.Size = new System.Drawing.Size(144, 17);
+            this.checkScrollbarWidthChange.TabIndex = 19;
+            this.checkScrollbarWidthChange.Text = "Scrollbar Width Changed";
+            this.checkScrollbarWidthChange.UseVisualStyleBackColor = true;
+            // 
+            // checkArrowIconsRemoved
+            // 
+            this.checkArrowIconsRemoved.AutoSize = true;
+            this.checkArrowIconsRemoved.Enabled = false;
+            this.checkArrowIconsRemoved.Location = new System.Drawing.Point(597, 229);
+            this.checkArrowIconsRemoved.Name = "checkArrowIconsRemoved";
+            this.checkArrowIconsRemoved.Size = new System.Drawing.Size(150, 17);
+            this.checkArrowIconsRemoved.TabIndex = 18;
+            this.checkArrowIconsRemoved.Text = "Shortcut Arrows Removed";
+            this.checkArrowIconsRemoved.UseVisualStyleBackColor = true;
             // 
             // editScrollbarWidth
             // 
@@ -622,6 +702,8 @@ namespace WindowsDebloatTool
             // 
             // performanceTab
             // 
+            this.performanceTab.Controls.Add(this.label3);
+            this.performanceTab.Controls.Add(this.button3);
             this.performanceTab.Controls.Add(this.checkResourcePrio);
             this.performanceTab.Controls.Add(this.checkGPU);
             this.performanceTab.Controls.Add(this.checkGameMode);
@@ -789,37 +871,24 @@ namespace WindowsDebloatTool
             this.performanceText.Text = "These settings optimize Windows settings for performance. These can enhance syste" +
     "m performance and result in higher FPS counts in Game Mode.";
             // 
-            // checkArrowIconsRemoved
+            // button3
             // 
-            this.checkArrowIconsRemoved.AutoSize = true;
-            this.checkArrowIconsRemoved.Enabled = false;
-            this.checkArrowIconsRemoved.Location = new System.Drawing.Point(597, 229);
-            this.checkArrowIconsRemoved.Name = "checkArrowIconsRemoved";
-            this.checkArrowIconsRemoved.Size = new System.Drawing.Size(150, 17);
-            this.checkArrowIconsRemoved.TabIndex = 18;
-            this.checkArrowIconsRemoved.Text = "Shortcut Arrows Removed";
-            this.checkArrowIconsRemoved.UseVisualStyleBackColor = true;
+            this.button3.Location = new System.Drawing.Point(620, 346);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 14;
+            this.button3.Text = "OK";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // checkScrollbarWidthChange
+            // label3
             // 
-            this.checkScrollbarWidthChange.AutoSize = true;
-            this.checkScrollbarWidthChange.Enabled = false;
-            this.checkScrollbarWidthChange.Location = new System.Drawing.Point(597, 252);
-            this.checkScrollbarWidthChange.Name = "checkScrollbarWidthChange";
-            this.checkScrollbarWidthChange.Size = new System.Drawing.Size(144, 17);
-            this.checkScrollbarWidthChange.TabIndex = 19;
-            this.checkScrollbarWidthChange.Text = "Scrollbar Width Changed";
-            this.checkScrollbarWidthChange.UseVisualStyleBackColor = true;
-            // 
-            // changeCursor
-            // 
-            this.changeCursor.Location = new System.Drawing.Point(460, 239);
-            this.changeCursor.Name = "changeCursor";
-            this.changeCursor.Size = new System.Drawing.Size(119, 72);
-            this.changeCursor.TabIndex = 20;
-            this.changeCursor.Text = "Change Cursor (Arrow, Hand, Wait) REQUIRES .CUR / .ANI FILES ";
-            this.changeCursor.UseVisualStyleBackColor = true;
-            this.changeCursor.Click += new System.EventHandler(this.changeCursor_Click);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(569, 320);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(178, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Restore Performance Tab to Default";
             // 
             // Form1
             // 
@@ -907,6 +976,12 @@ namespace WindowsDebloatTool
         private System.Windows.Forms.CheckBox checkArrowIconsRemoved;
         private System.Windows.Forms.CheckBox checkScrollbarWidthChange;
         private System.Windows.Forms.Button changeCursor;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button3;
     }
 }
 
