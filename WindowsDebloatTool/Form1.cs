@@ -21,6 +21,39 @@ namespace WindowsDebloatTool
             CheckRegistrySettingsPerformance();
         }
 
+        // Method to set registry values to Windows default
+        private void RestoreRegistryToDefault(string registryPath, string valueName, object defaultValue)
+        {
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath, true))
+                {
+                    if (key != null)
+                    {
+                        //check if the value exists 
+                        object currentValue = key.GetValue(valueName, null);
+                        if (currentValue == null || !currentValue.Equals(defaultValue))
+                        {
+                            // Restore the default value
+                            key.SetValue(valueName, defaultValue);
+                        }
+                    }
+                    else
+                    {
+                        // If the key doesn't exist, create it and set the default value
+                        using (RegistryKey newKey = Registry.CurrentUser.CreateSubKey(registryPath))
+                        {
+                            newKey?.SetValue(valueName, defaultValue);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                qolFeedback.Text = ("Error: " + ex.Message + " has occurred.");
+            }
+        }
+
         //This method's parameters allow us to check off the checkboxes should the expected value be met
         private void CheckRegistrySetting(string registryPath, string valueName, object expectedValue, CheckBox checkBoxToUpdate)
         {
@@ -80,8 +113,8 @@ namespace WindowsDebloatTool
             }
         }
 
-        //Special method that works on shortcut arrow button (could not get CheckRegistrySetting method to work for this key)
         
+
 
 
 
@@ -130,6 +163,8 @@ namespace WindowsDebloatTool
                 checkAppPromotions
             );
 
+
+
             // Check for "HttpAcceptLanguageOptOut"
             CheckRegistrySetting(
                 @"Control Panel\International\User Profile",
@@ -163,6 +198,73 @@ namespace WindowsDebloatTool
             );
         }
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // QUALITY OF LIFE DEFAULT VALUES
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //Searchbar
+            RestoreRegistryToDefault(
+                @"SOFTWARE\Policies\Microsoft\Windows\Explorer",
+                "DisableSearchBoxSuggestions",
+                0);
+
+            //Taskbar Al
+            RestoreRegistryToDefault(
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
+                "TaskbarAl",
+                1);
+
+            //AD ID
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo",
+                "Enabled",
+                1);
+
+            //File extenstion
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
+                "HideFileExt",
+                1);
+
+            //Softlanding
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager",
+                "SoftLandingEnabled",
+                1);
+
+            //Http Accept
+            RestoreRegistryToDefault(
+                @"Control Panel\International\User Profile",
+                "HttpAcceptLanguageOptOut",
+                0);
+
+            //AI Analytics
+            RestoreRegistryToDefault(
+                @"Software\Policies\Microsoft\Windows\WindowsAI",
+                "DisableAIDataAnalysis",
+                0);
+
+            //Saving Snapshots
+            RestoreRegistryToDefault(
+                @"Software\Policies\Microsoft\Windows\WindowsAI",
+                "TurnOffSavingSnapshots",
+                0);
+
+            //Track Prog
+            RestoreRegistryToDefault(
+                 @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
+                "Start_TrackProgs",
+                1);
+
+            //Account Notif
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\SystemSettings\AccountNotifications",
+                "EnableAccountNotifications",
+                1);
+
+            qolFeedback.Text = ("QoL set to default");
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // THEME CHECK LISTENER
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,13 +320,126 @@ namespace WindowsDebloatTool
             );
 
 
-            CheckArrowIconSetting(checkArrowIconsRemoved);
+            
 
-            CheckScrollbarWidthChange(checkScrollbarWidthChange);
-
-          
 
         }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // THEME DEFAULT VALUES
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Dark Theme
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+                "SystemUsesLightTheme", 
+                1);
+
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
+                "AppsUseLightTheme",
+                1);
+
+            // AccentColor
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Lighting",
+                "UseSystemAccentColor",
+                1);
+
+            // Check for "NOC_GLOBAL_SETTING_ALLOW_NOTIFICATION_SOUND"
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\Notifications\Settings",
+                "NOC_GLOBAL_SETTING_ALLOW_NOTIFICATION_SOUND",
+                1);
+
+            // Check for "AmbientLightingEnabled"
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Lighting",
+                "AmbientLightingEnabled",
+                1);
+
+            //ControlledByForegroundApp
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Lighting",
+                "ControlledByForegroundApp",
+                1
+            );
+
+            //NotifSounds
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\Notifications\Settings",
+                "NOC_GLOBAL_SETTING_ALLOW_TOASTS_ABOVE_LOCK",
+                1
+            );
+
+            //Scrollbar
+            RestoreRegistryToDefault(
+                @"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics",
+                "ScrollWidth",
+                -255);
+
+            themeFeedback.Text = ("Theming set to default");
+
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // PERFORMANCE DEFAULT VALUES
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //VideoQuality
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\Windows\CurrentVersion\VideoSettings",
+                "VideoQualityOnBattery", 
+                0
+               
+            );
+
+            // Gamebar
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\GameBar",
+                "UseNexusForGameBarEnabled",
+                1
+            );
+
+
+
+            // CPU Priority
+            RestoreRegistryToDefault(
+                @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games",
+                "Priority",
+                5
+            );
+
+            // Auto Gamemode
+            RestoreRegistryToDefault(
+                @"Software\Microsoft\GameBar",
+                "AutoGameModeEnabled",
+                0
+            );
+
+            // GPU Prio
+            RestoreRegistryToDefault(
+                @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games",
+                "GPU Priority",
+                7
+            );
+
+            // Prio Separation
+            RestoreRegistryToDefault(
+                @"SYSTEM\CurrentControlSet\Control\PriorityControl",
+                "Win32PrioritySeparation",
+                2
+            );
+
+            performanceFeedback.Text = ("Performance set to default");
+        }
+
+
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // PERFORMANCE CHECK LISTENER
@@ -246,6 +461,9 @@ namespace WindowsDebloatTool
                 0,
                 checkGameBar
             );
+
+
+
 
             // Check for "Priority"
             CheckRegistrySetting(
@@ -818,9 +1036,9 @@ namespace WindowsDebloatTool
                 shellIconsKey.Close();
                 key.Close();
 
-                
+
                 themeFeedback.Text = "The 'Shell Icons' registry key and value have been added successfully!";
-                                
+
             }
             catch (Exception ex)
             {
@@ -838,7 +1056,7 @@ namespace WindowsDebloatTool
             {
                 //reg path and value defined here
                 string registryPath = @"Control Panel\Desktop\WindowMetrics";
-                string valueName = "ScrollWidth";  
+                string valueName = "ScrollWidth";
 
                 using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath))
                 {
@@ -847,8 +1065,8 @@ namespace WindowsDebloatTool
                         // read value as a string
                         object value = key.GetValue(valueName, null);
 
-                        // Check if the value is not equal to the string "-15"
-                        checkScrollbarWidthChange.Checked = value != null && value.ToString() != "-15";
+                        // Check if the value is not equal to the string "-255" (default size)
+                        checkScrollbarWidthChange.Checked = value != null && value.ToString() != "-255";
                     }
                     else
                     {
@@ -884,7 +1102,7 @@ namespace WindowsDebloatTool
                     // Update the registry to adjust the scrollbar width
                     Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "ScrollWidth", registryValue.ToString());
 
-                   
+
                     themeFeedback.Text = $"Scrollbar width has been set to {pixelValue} pixels.";
                 }
                 else
@@ -989,14 +1207,14 @@ namespace WindowsDebloatTool
                     MessageBox.Show("Wait cursor change skipped.");
                 }
             }
-            themeFeedback.Text = "Cursor was changed"; 
+            themeFeedback.Text = "Cursor was changed";
         }
 
-        
 
-        
 
-        
+
+
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // PERFORMANCE FUNCTIONS 
@@ -1200,7 +1418,7 @@ namespace WindowsDebloatTool
         }
 
         
-    }
+    }  
 }
     
 
