@@ -320,9 +320,9 @@ namespace WindowsDebloatTool
             );
 
 
-            
+            CheckArrowIconSetting(checkArrowIconsRemoved);
 
-
+            CheckScrollbarWidthChange(checkScrollbarWidthChange);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -376,7 +376,7 @@ namespace WindowsDebloatTool
 
             //Scrollbar
             RestoreRegistryToDefault(
-                @"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics",
+                @"Control Panel\Desktop\WindowMetrics",
                 "ScrollWidth",
                 -255);
 
